@@ -6,7 +6,7 @@ import { VersioningType } from '@nestjs/common';
 
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { AppModule } from './app.module';
+import { AppModule } from 'app/app.module';
 
 declare const module: any;
 
