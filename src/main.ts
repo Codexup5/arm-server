@@ -19,6 +19,17 @@ async function bootstrap() {
         .setTitle('ArmServer')
         .setVersion('1.0')
         .addTag('arm-server')
+        .addBearerAuth(
+            {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+                name: 'JWT',
+                description: 'Enter JWT token',
+                in: 'header',
+            },
+            'JWT-auth',
+        )
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/v1', app, document);
