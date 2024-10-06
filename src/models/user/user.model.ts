@@ -15,7 +15,7 @@ export class User {
     @Column({ name: 'family_name', type: 'varchar' })
     public familyName: string;
 
-    @Column({ name: 'patronymic', type: 'varchar' })
+    @Column({ name: 'patronymic', type: 'varchar', nullable: true })
     public patronymic: string;
 
     @Column({ name: 'email', type: 'varchar', unique: true })
