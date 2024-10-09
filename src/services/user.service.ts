@@ -40,7 +40,7 @@ export class UsersService {
                 throw new NotFoundException(USER_NOT_FOUND);
             }
 
-            return await this.usersRepository.findOne(parameter);
+            return user;
         });
     }
 
