@@ -43,10 +43,6 @@ export abstract class BaseEntity {
     @DeleteDateColumn({ name: 'delete_date', type: 'timestamptz' })
     deleteDate: Date;
 
-    @ApiProperty({ name: 'createdBy', type: 'varchar', maxLength: 300 })
-    @Column({ name: 'created_by', type: 'varchar', length: 300 })
-    createdBy: string;
-
     @ApiProperty({
         name: 'lastChangeDate',
         type: 'timestamptz',
@@ -58,8 +54,4 @@ export abstract class BaseEntity {
         default: () => 'CURRENT_TIMESTAMP',
     })
     lastChangeDate: Date;
-
-    @ApiProperty({ name: 'lastChangedBy', type: 'varchar', maxLength: 300 })
-    @Column({ name: 'last_changed_by', type: 'varchar', length: 300 })
-    lastChangedBy: string;
 }

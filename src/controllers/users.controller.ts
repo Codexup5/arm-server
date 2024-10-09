@@ -34,31 +34,31 @@ export class UsersController {
     @HasRoles(Role.Admin)
     @UseGuards(RoleGuard)
     @Get()
-    findAll(): Promise<User[]> {
-        return this.usersService.findAll();
+    async findAll(): Promise<User[]> {
+        return await this.usersService.findAll();
     }
 
     @ApiOperation({ description: 'Получение пользователя по id' })
     @HasRoles(Role.Admin)
     @UseGuards(RoleGuard)
     @Get(':id')
-    findOne(@Param('id') id: string): Promise<User | null> {
-        return this.usersService.findOne({ where: { id } });
+    async findOne(@Param('id') id: string): Promise<User | null> {
+        return await this.usersService.findOne({ where: { id } });
     }
 
     @ApiOperation({ description: 'Обновление данных ондного пользователя' })
     @HasRoles(Role.HR, Role.Admin)
     @UseGuards(RoleGuard)
     @Post(':id')
-    updateOne(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
-        return this.usersService.updateOne(id, updateUserDto);
+    async updateOne(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
+        return await this.usersService.updateOne(id, updateUserDto);
     }
 
     @ApiOperation({ description: 'Удаление пользователя по id' })
     @HasRoles(Role.HR, Role.Admin)
     @UseGuards(RoleGuard)
     @Delete(':id')
-    deleteOneById(@Param('id') id: string) {
-        return this.usersService.deleteOneById(id);
+    async deleteOneById(@Param('id') id: string) {
+        return await this.usersService.deleteOneById(id);
     }
 }
