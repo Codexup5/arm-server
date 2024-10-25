@@ -4,6 +4,12 @@ export interface AccessToken {
     accessToken: string;
 }
 
+export interface SuccessfullyUpdatedEntityResponse<E> {
+    success: boolean;
+    message: string;
+    newFields: E;
+}
+
 export interface UserPayload {
     id: string;
     role: Role;

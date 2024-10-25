@@ -1,8 +1,23 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    DefaultValuePipe,
+    Delete,
+    Get,
+    Param,
+    ParseArrayPipe,
+    Patch,
+    Post,
+    Query,
+    UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { HasRoles } from 'auth/decorators/roles-decorator';
 import { RoleGuard } from 'auth/guards/role.guard';
+import { SuccessfullyUpdatedEntityResponse } from 'common/interfaces';
+import { PageOptionsDto } from 'common/pagination/dtos/page-options.dto';
+import { PageDto } from 'common/pagination/dtos/page.dto';
 
 import { CreateEmployeeDto } from 'dtos/employee/createEmployee';
 import { UpdateEmployeeDto } from 'dtos/employee/updateEmployee';
@@ -12,7 +27,9 @@ import { Role } from 'models/user/user.enums';
 
 import { EmployeesService } from 'services/employee.service';
 
-@ApiTags('Employee')
+export type AllowedEmployeeRelations = ['name', 'familyName', 'phoneNumber'];
+
+@ApiTags('Employees')
 @Controller('/employees')
 @ApiBearerAuth('JWT-auth')
 export class EmployeeController {
@@ -34,6 +51,26 @@ export class EmployeeController {
         return await this.employeesService.findAll();
     }
 
+    @ApiOperation({ description: 'Получение сотрудников порционно' })
+    @HasRoles(Role.HR, Role.Admin)
+    @UseGuards(RoleGuard)
+    @Get('/filter?')
+    async findSome(
+        @Query() pageOptionsDto: PageOptionsDto,
+        @Query(
+            'relations',
+            new DefaultValuePipe([]),
+            new ParseArrayPipe({
+                items: String,
+                separator: ',',
+                optional: true,
+            }),
+        )
+        relations: AllowedEmployeeRelations,
+    ): Promise<PageDto<Employee>> {
+        return await this.employeesService.findSome(pageOptionsDto, relations);
+    }
+
     @ApiOperation({ description: 'Получение сотрудника по id' })
     @HasRoles(Role.HR, Role.Admin)
     @UseGuards(RoleGuard)
@@ -42,15 +79,15 @@ export class EmployeeController {
         return await this.employeesService.findOneById(id);
     }
 
-    @ApiOperation({ description: 'Обновление данных сотрудника' })
+    @ApiOperation({ description: 'Обновление продукта по id' })
     @HasRoles(Role.HR, Role.Admin)
     @UseGuards(RoleGuard)
-    @Post(':id')
-    async updateOne(
+    @Patch('/:id')
+    async updateOneById(
         @Param('id') id: string,
         @Body() updateEmployeeDto: UpdateEmployeeDto,
-    ): Promise<Employee> {
-        return await this.employeesService.updateOne(id, updateEmployeeDto);
+    ): Promise<SuccessfullyUpdatedEntityResponse<Employee>> {
+        return await this.employeesService.updateOneById(id, updateEmployeeDto);
     }
 
     @ApiOperation({ description: 'Архивация сотрудника по id' })
